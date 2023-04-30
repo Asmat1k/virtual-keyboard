@@ -32,7 +32,7 @@
 .keyboard .keyboard__row .keyboard__button:active {
   transition: 0.1s;
   box-shadow: 0px 2px 19px 4px rgba(34, 60, 80, 0.11);
-  transform: scale(0.95);
+  transform: scale(0.85);
 }
 .keyboard .keyboard__row .keyboard__button.active {
   transition: 0.1s;
@@ -43,7 +43,7 @@
   min-width: 103px;
 }
 .keyboard .keyboard__row .keyboard__shift {
-  min-width: 97px;
+  min-width: 103px;
 }
 .keyboard .keyboard__row .keyboard__medium-button {
   min-width: 58px;
@@ -79,9 +79,6 @@
   .keyboard .keyboard__row .keyboard__big-button {
     min-width: 103px;
   }
-  .keyboard .keyboard__row .keyboard__shift {
-    min-width: 88px;
-  }
   .keyboard .keyboard__row .keyboard__medium-button {
     min-width: 61px;
   }
@@ -112,10 +109,10 @@
     min-width: 82px;
   }
   .keyboard .keyboard__row .keyboard__shift {
-    min-width: 71px;
+    min-width: 81px;
   }
   .keyboard .keyboard__row .keyboard__medium-button {
-    min-width: 40px;
+    min-width: 37px;
   }
   .keyboard .keyboard__row .keyboard__button_colored {
     background-color: rgba(54, 54, 54, 0.7058823529);
