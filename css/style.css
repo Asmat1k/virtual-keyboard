@@ -66,6 +66,11 @@
   transition: 0.3s;
 }
 
+.warning {
+  font-weight: 600;
+  margin: 10px;
+}
+
 @media (max-width: 765px) {
   .input-block {
     min-width: 550px;
