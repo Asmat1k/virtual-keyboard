@@ -23,13 +23,13 @@ function changeOnNew(sym, flag) {
   const { length } = symbols;
   let change = [];
   if (lang === 'eng') {
-    change = flag ? ['{', '}', '/', ':', '"', '<', '>', '|'] : ['[', ']', '\\', ';', "'", ',', '.', '/'];
+    change = flag ? ['{', '}', '|', ':', '"', '<', '>', '?'] : ['[', ']', '\\', ';', "'", ',', '.', '/'];
     for (let i = 0; i < length; i += 1) {
       symbols[i].textContent = change[i];
     }
   } else {
-    change = flag ? ['/', ','] : ['|', '.'];
-    const find = ['/', ',', '|', '.'];
+    change = flag ? ['/', ','] : ['\\', '.'];
+    const find = ['\\', ',', '/', '.'];
     for (let i = 0; i < length; i += 1) {
       if (find.includes(symbols[i].textContent)) {
         symbols[i].textContent = change[i];
@@ -44,9 +44,9 @@ function changeSym(letters, flag) {
   let find = [];
   getLocalStorage();
   if (lang === 'eng') {
-    find = flag ? ['[', ']', '\\', ';', "'", ',', '.', '/'] : ['{', '}', '/', ':', '"', '<', '>', '|'];
+    find = flag ? ['[', ']', '\\', ';', "'", ',', '.', '/'] : ['{', '}', '|', ':', '"', '<', '>', '?'];
   } else {
-    find = ['|', '.', '/', ','];
+    find = ['\\', '.', '/', ','];
   }
   for (let i = 0; i < length; i += 1) {
     if (find.includes(letters[i].textContent)) {
@@ -60,12 +60,6 @@ export default function changeButtons(buttons, flag) {
   const { length } = buttons;
   const letters = buttons;
   let symFirstRow;
-  /*
-  if(caps) {
-    caps = false
-    changeCase(letters, false);
-  }
-  */
   changeSym(buttons, flag);
   if (lang === 'eng') {
     symFirstRow = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+'];

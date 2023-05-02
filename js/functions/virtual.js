@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-assign */
 /* eslint-disable import/extensions */
 import changeButtons from './shift.js';
 import getLetters from './getletters.js';
@@ -35,13 +36,13 @@ function changeLang(buttons) {
   // TODO: поменять символы
   const RUS = [
     'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|',
+    'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\',
     'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э',
     'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '↑', '←', '↓', '→',
   ];
   const ENG = [
     '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|',
+    'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\',
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'",
     'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '↑', '←', '↓', '→',
   ];
@@ -76,75 +77,71 @@ export default function virtualPush() {
   const buttons = document.querySelectorAll('.keyboard__button');
   const display = document.querySelector('.input-block');
   const letters = getLetters(buttons);
-  const notButtonToEnter = ['Caps', 'CAPS', 'Shift', 'Ctrl', 'Win', 'Alt', 'Back', 'Del', 'eng', 'rus'];
-  const deleteButtons = ['Del', 'Back'];
+  const notButtonToEnter = ['Caps', 'Shift', 'Ctrl', 'Win', 'Alt', 'Back', 'Del', 'Enter', 'Tab', '__', 'Del', 'Back', 'eng', 'rus'];
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
-      if (button.textContent.toLocaleLowerCase() === 'caps') {
-        caps = !caps;
-        changeCase(letters, caps);
-      }
-      if (button.textContent.toLocaleLowerCase() === 'shift') {
-        shift = !shift;
-        caps = false;
-        changeCase(letters, false);
-        changeButtons(letters, shift);
+      display.focus();
+      const start = display.selectionStart;
+      const end = display.selectionEnd;
+      const oldStr = display.value;
+      // Ввод текста
+      switch (button.textContent.toLocaleLowerCase()) {
+        case 'caps': {
+          caps = !caps;
+          changeCase(letters, caps);
+          break;
+        }
+        case 'shift': {
+          shift = !shift;
+          changeButtons(letters, shift);
+          if (!shift) {
+            changeCase(letters, caps);
+          }
+          break;
+        }
+        case '__': {
+          display.value = `${oldStr.slice(0, start)} ${oldStr.slice(end)}`;
+          display.selectionStart = display.selectionEnd = start + 1;
+          break;
+        }
+        case 'tab': {
+          display.value = `${display.value.slice(0, start)}  ${display.value.slice(end)}`;
+          display.selectionStart = display.selectionEnd = start + 2;
+          break;
+        }
+        case 'enter': {
+          display.value = `${display.value.slice(0, start)}\n${display.value.slice(end)}`;
+          display.selectionStart = display.selectionEnd = start + 1;
+          break;
+        }
+        case 'back': {
+          if (!display.focus()) {
+            display.focus();
+          }
+          display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
+          display.selectionStart = display.selectionEnd = start - 1;
+          break;
+        }
+        case 'del': {
+          if (!display.focus()) {
+            display.focus();
+          }
+          display.value = oldStr.slice(0, start) + oldStr.slice(end + 1);
+          // eslint-disable-next-line no-multi-assign
+          display.selectionStart = display.selectionEnd = start;
+          break;
+        }
+        default: {
+          if (!notButtonToEnter.includes(button.textContent)) {
+            display.value += button.textContent;
+          }
+          break;
+        }
       }
       // Смена языка
       if (button.classList.contains('keyboard__change')) {
         lang = lang === 'eng' ? 'rus' : 'eng';
         changeLang(letters, lang);
-      }
-      // Удаление
-      if (deleteButtons.includes(button.textContent)) {
-        switch (button.textContent) {
-          case 'Back': {
-            if (!display.focus()) {
-              display.focus();
-            }
-            const start = display.selectionStart;
-            const end = display.selectionEnd;
-            const oldStr = display.value;
-            display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
-            // eslint-disable-next-line no-multi-assign
-            display.selectionStart = display.selectionEnd = start - 1;
-            break;
-          }
-          case 'Del': {
-            if (!display.focus()) {
-              display.focus();
-            }
-            const oldStr = display.value;
-            const start = display.selectionStart;
-            const end = display.selectionEnd;
-            display.value = oldStr.slice(0, start) + oldStr.slice(end + 1);
-            // eslint-disable-next-line no-multi-assign
-            display.selectionStart = display.selectionEnd = start;
-            break;
-          }
-          default:
-        }
-      }
-      // Ввод текста
-      if (!notButtonToEnter.includes(button.textContent)) {
-        switch (button.textContent) {
-          case '__': {
-            display.value += ' ';
-            break;
-          }
-          case 'Tab': {
-            display.value += '  ';
-            break;
-          }
-          case 'Enter': {
-            display.value += '\n';
-            break;
-          }
-          default: {
-            display.value += button.textContent;
-            break;
-          }
-        }
       }
     });
   });
