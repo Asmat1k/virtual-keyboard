@@ -133,7 +133,9 @@ export default function virtualPush() {
         }
         default: {
           if (!notButtonToEnter.includes(button.textContent)) {
-            display.value += button.textContent;
+            display.focus();
+            display.value = `${display.value.slice(0, start)}${button.textContent}${display.value.slice(end)}`;
+            display.selectionStart = display.selectionEnd = start + 1;
           }
           break;
         }
