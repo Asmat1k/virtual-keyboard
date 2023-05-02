@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-assign */
 /* eslint-disable import/extensions */
 /* eslint-disable max-len */
 import changeButtons from './shift.js';
@@ -67,32 +68,41 @@ export default function realPush() {
   const buttons = document.querySelectorAll('.keyboard__button');
   const display = document.querySelector('.input-block');
   const shift = document.querySelector('.keyboard__shift');
-  const change = document.querySelector('.keyboard__change');
   const letters = getLetters(buttons);
-  const RUS = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'э', 'ю', 'я'];
-  const ENG = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const notButtonToEnter = ['Caps', 'Shift', 'Ctrl', 'Win', 'Alt', 'Back', 'Del', 'Enter', 'Tab', '__', 'Del', 'Back', 'eng', 'rus'];
   const arrows = ['↑', '←', '↓', '→'];
   const arrowsCode = ['ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight'];
   document.body.addEventListener('keydown', (event) => {
+    const start = display.selectionStart;
+    const end = display.selectionEnd;
+    const oldStr = display.value;
+    let keyValue;
+    for (let i = 0; i < buttons.length; i += 1) {
+      display.selectionStart = display.value.length;
+      if (buttons[i].dataset.code === event.code) {
+        keyValue = buttons[i].textContent;
+      }
+    }
     switch (event.key.toLowerCase()) {
       case 'tab': {
         event.preventDefault();
-        const start = display.selectionStart;
-        const end = display.selectionEnd;
-        display.value = `${display.value.slice(0, start)}  ${display.value.slice(end)}`;
+        display.value = `${oldStr.slice(0, start)}  ${oldStr.slice(end)}`;
         display.selectionStart = start + 2;
         display.selectionEnd = start + 2;
         break;
       }
       case 'capslock': {
+        event.preventDefault();
         caps = !caps;
         changeCase(letters, caps);
         break;
       }
       case 'shift': {
-        caps = false;
-        changeCase(letters, false);
+        event.preventDefault();
         changeButtons(letters, true);
+        if (caps) {
+          changeCase(letters, false);
+        }
         document.body.addEventListener('keydown', (eventNew) => {
           if (eventNew.key.toLowerCase() === 'alt') {
             lang = lang === 'eng' ? 'rus' : 'eng';
@@ -102,45 +112,47 @@ export default function realPush() {
         break;
       }
       case 'delete': {
-        const oldStr = display.value;
-        const start = display.selectionStart;
-        const end = display.selectionEnd;
+        event.preventDefault();
         display.value = oldStr.slice(0, start) + oldStr.slice(end + 1);
-        // eslint-disable-next-line no-multi-assign
         display.selectionStart = display.selectionEnd = start;
+        break;
+      }
+      case 'enter': {
+        event.preventDefault();
+        display.value = `${display.value.slice(0, start)}\n${display.value.slice(end)}`;
+        display.selectionStart = display.selectionEnd = start + 1;
         break;
       }
       case 'backspace': {
         event.preventDefault();
-        const start = display.selectionStart;
-        const end = display.selectionEnd;
-        const oldStr = display.value;
-        display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
-        // eslint-disable-next-line no-multi-assign
+        if (display.selectionStart > 0) {
+          display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
+          display.selectionStart = display.selectionEnd = start - 1;
+        }
+        break;
+      }
+      case ' ': {
+        event.preventDefault();
+        display.value = `${oldStr.slice(0, start)} ${oldStr.slice(end)}`;
+        display.selectionStart = display.selectionEnd = start + 1;
         break;
       }
       default: {
-        display.focus();
+        event.preventDefault();
+        if (!notButtonToEnter.includes(keyValue) && keyValue !== undefined) {
+          display.value = `${oldStr.slice(0, start)}${keyValue}${oldStr.slice(end)}`;
+          display.selectionStart = display.selectionEnd = start + 1;
+        }
         if (arrowsCode.includes(event.code)) {
-          // чтобы не было перехода назад
-          event.preventDefault();
           for (let i = 0; i < 4; i += 1) {
             if (event.code === arrowsCode[i]) {
-              display.value += arrows[i];
+              display.value = `${oldStr.slice(0, start)}${arrows[i]}${oldStr.slice(end)}`;
             }
           }
-        }
-        if (RUS.includes(event.key.toLowerCase()) && change.textContent.toLowerCase() === 'eng') {
-          lang = 'rus';
-          changeLang(letters);
-        } else if (ENG.includes(event.key.toLowerCase()) && change.textContent.toLowerCase() === 'rus') {
-          lang = 'eng';
-          changeLang(letters);
         }
       }
     }
     for (let i = 0; i < buttons.length; i += 1) {
-      display.selectionStart = display.value.length;
       if (buttons[i].dataset.code === event.code) {
         buttons[i].classList.add('active');
       }
@@ -153,6 +165,11 @@ export default function realPush() {
     for (let i = 0; i < buttons.length; i += 1) {
       if (buttons[i].dataset.code === event.code) {
         buttons[i].classList.remove('active');
+      }
+      if (buttons[i].dataset.code === 'ShiftLeft' || buttons[i].dataset.code === 'ShiftRight') {
+        if (caps) {
+          changeCase(letters, true);
+        }
       }
     }
   });

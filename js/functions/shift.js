@@ -81,6 +81,9 @@ export default function changeButtons(buttons, flag) {
       if (i === 0 && lang === 'rus') {
         letters[i].textContent = 'ё';
       }
+      if (i === 0 && lang === 'eng') {
+        letters[i].textContent = '`';
+      }
       if (i > 0 && i < 13) {
         letters[i].textContent = BUTTONS[0][i];
       } else {

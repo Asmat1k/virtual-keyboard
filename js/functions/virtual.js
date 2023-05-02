@@ -94,8 +94,14 @@ export default function virtualPush() {
         case 'shift': {
           shift = !shift;
           changeButtons(letters, shift);
-          if (!shift) {
-            changeCase(letters, caps);
+          if (caps && !shift) {
+            for (let i = 0; i < letters.length; i += 1) {
+              letters[i].textContent = letters[i].textContent.toUpperCase();
+            }
+          } else if (caps && shift) {
+            for (let i = 0; i < letters.length; i += 1) {
+              letters[i].textContent = letters[i].textContent.toLocaleLowerCase();
+            }
           }
           break;
         }
