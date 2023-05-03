@@ -1,10 +1,13 @@
 /* eslint-disable no-multi-assign */
 /* eslint-disable import/extensions */
 /* eslint-disable max-len */
-import changeButtons from './shift.js';
-import getLetters from './getletters.js';
+import changeButtons from './changeButtons.js';
+import getLetters from './getLetters.js';
 import changeCase from './changeCase.js';
+import changeLang from './changeLang.js';
 
+let caps = false;
+let shiftStatus = false;
 let lang;
 
 function getLocalStorage() {
@@ -24,47 +27,7 @@ function setLocalStorage(key, value) {
 }
 window.addEventListener('beforeunload', setLocalStorage);
 
-// Сброс нажатых кнопок состяний
-function reset() {
-  const buttons = document.querySelectorAll('.keyboard__button');
-  const letters = getLetters(buttons);
-  changeButtons(letters, false);
-  changeCase(letters, false);
-}
-
-function changeLang(buttons) {
-  const letters = buttons;
-  const change = document.querySelector('.keyboard__change');
-  change.textContent = lang;
-  reset();
-  // TODO: поменять символы
-  const RUS = [
-    'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\',
-    'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э',
-    'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '↑', '←', '↓', '→',
-  ];
-  const ENG = [
-    '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\',
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'",
-    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '↑', '←', '↓', '→',
-  ];
-  const { length } = letters;
-  if (lang === 'rus') {
-    for (let i = 0; i < length; i += 1) {
-      letters[i].textContent = RUS[i];
-    }
-  } else {
-    for (let i = 0; i < length; i += 1) {
-      letters[i].textContent = ENG[i];
-    }
-  }
-  setLocalStorage('lang', lang);
-}
-
 export default function realPush() {
-  let caps = false;
   const buttons = document.querySelectorAll('.keyboard__button');
   const display = document.querySelector('.input-block');
   const shift = document.querySelector('.keyboard__shift');
@@ -83,48 +46,52 @@ export default function realPush() {
         keyValue = buttons[i].textContent;
       }
     }
+    event.preventDefault();
     switch (event.key.toLowerCase()) {
       case 'tab': {
-        event.preventDefault();
         display.value = `${oldStr.slice(0, start)}  ${oldStr.slice(end)}`;
         display.selectionStart = start + 2;
         display.selectionEnd = start + 2;
         break;
       }
       case 'capslock': {
-        event.preventDefault();
         caps = !caps;
         changeCase(letters, caps);
+        display.selectionStart = display.selectionEnd = start;
         break;
       }
       case 'shift': {
-        event.preventDefault();
+        shiftStatus = !shiftStatus;
         changeButtons(letters, true);
-        if (caps) {
-          changeCase(letters, false);
+        if(!caps) {
+          for (let i = 0; i < letters.length; i += 1) {
+            letters[i].textContent = letters[i].textContent.toUpperCase();
+          }
+        } else if (caps && shift) {
+          for (let i = 0; i < letters.length; i += 1) {
+            letters[i].textContent = letters[i].textContent.toLocaleLowerCase();
+          }
         }
         document.body.addEventListener('keydown', (eventNew) => {
           if (eventNew.key.toLowerCase() === 'alt') {
             lang = lang === 'eng' ? 'rus' : 'eng';
-            changeLang(letters);
+            changeLang(letters, lang, shift, caps);
           }
         });
+        display.selectionStart = display.selectionEnd = start;
         break;
       }
       case 'delete': {
-        event.preventDefault();
         display.value = oldStr.slice(0, start) + oldStr.slice(end + 1);
         display.selectionStart = display.selectionEnd = start;
         break;
       }
       case 'enter': {
-        event.preventDefault();
         display.value = `${display.value.slice(0, start)}\n${display.value.slice(end)}`;
         display.selectionStart = display.selectionEnd = start + 1;
         break;
       }
       case 'backspace': {
-        event.preventDefault();
         if (start >= 1) {
           display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
           display.selectionStart = display.selectionEnd = start - 1;
@@ -135,13 +102,19 @@ export default function realPush() {
         break;
       }
       case ' ': {
-        event.preventDefault();
         display.value = `${oldStr.slice(0, start)} ${oldStr.slice(end)}`;
         display.selectionStart = display.selectionEnd = start + 1;
         break;
       }
+      case 'control': {
+        display.selectionStart = display.selectionEnd = start;
+        break;
+      }
+      case 'alt': {
+        display.selectionStart = display.selectionEnd = start;
+        break;
+      }
       default: {
-        event.preventDefault();
         if (!notButtonToEnter.includes(keyValue) && keyValue !== undefined) {
           display.value = `${oldStr.slice(0, start)}${keyValue}${oldStr.slice(end)}`;
           display.selectionStart = display.selectionEnd = start + 1;
@@ -169,9 +142,15 @@ export default function realPush() {
       if (buttons[i].dataset.code === event.code) {
         buttons[i].classList.remove('active');
       }
-      if (buttons[i].dataset.code === 'ShiftLeft' || buttons[i].dataset.code === 'ShiftRight') {
-        if (caps) {
-          changeCase(letters, true);
+      if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+        if(caps) {
+          for (let i = 0; i < letters.length; i += 1) {
+            letters[i].textContent = letters[i].textContent.toUpperCase();
+          }
+        } else {
+          for (let i = 0; i < letters.length; i += 1) {
+            letters[i].textContent = letters[i].textContent.toLocaleLowerCase();
+          }
         }
       }
     }
