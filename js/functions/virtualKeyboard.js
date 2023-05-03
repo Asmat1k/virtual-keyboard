@@ -1,63 +1,13 @@
 /* eslint-disable no-multi-assign */
 /* eslint-disable import/extensions */
-import changeButtons from './shift.js';
-import getLetters from './getletters.js';
+import changeButtons from './changeButtons.js';
+import getLetters from './getLetters.js';
 import changeCase from './changeCase.js';
+import changeLang from './changeLang.js';
 
 let caps = false;
 let shift = false;
 let lang;
-
-// в лока сторэдж
-function setLocalStorage(key, value) {
-  localStorage.setItem(key, value);
-}
-window.addEventListener('beforeunload', setLocalStorage);
-
-// Сброс нажатых кнопок состяний
-function reset() {
-  const buttons = document.querySelectorAll('.keyboard__button');
-  const letters = getLetters(buttons);
-  if (shift) {
-    shift = false;
-    changeButtons(letters, false);
-  }
-  if (caps) {
-    caps = false;
-    changeCase(letters, false);
-  }
-}
-
-function changeLang(buttons) {
-  const letters = buttons;
-  const change = document.querySelector('.keyboard__change');
-  change.textContent = lang;
-  reset();
-  // TODO: поменять символы
-  const RUS = [
-    'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\',
-    'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э',
-    'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '↑', '←', '↓', '→',
-  ];
-  const ENG = [
-    '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
-    'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\',
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'",
-    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '↑', '←', '↓', '→',
-  ];
-  const { length } = letters;
-  if (lang === 'rus') {
-    for (let i = 0; i < length; i += 1) {
-      letters[i].textContent = RUS[i];
-    }
-  } else {
-    for (let i = 0; i < length; i += 1) {
-      letters[i].textContent = ENG[i];
-    }
-  }
-  setLocalStorage('lang', lang);
-}
 
 function getLocalStorage() {
   const buttons = document.querySelectorAll('.keyboard__button');
@@ -67,7 +17,7 @@ function getLocalStorage() {
       lang = 'eng';
     } else {
       lang = 'rus';
-      changeLang(letters);
+      changeLang(letters, lang, shift, caps);
     }
   }
 }
@@ -124,13 +74,8 @@ export default function virtualPush() {
           if (!display.focus()) {
             display.focus();
           }
-          if (start >= 1) {
-            display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
-            display.selectionStart = display.selectionEnd = start - 1;
-          }
-          else {
-            display.selectionStart = display.selectionEnd = start
-          }
+          display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
+          display.selectionStart = display.selectionEnd = start - 1;
           break;
         }
         case 'del': {
@@ -154,7 +99,7 @@ export default function virtualPush() {
       // Смена языка
       if (button.classList.contains('keyboard__change')) {
         lang = lang === 'eng' ? 'rus' : 'eng';
-        changeLang(letters, lang);
+        changeLang(letters, lang, shift, caps);
       }
     });
   });
