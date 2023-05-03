@@ -1,4 +1,4 @@
-import getLetters from './getLetters.js';
+import getLetters from './getletters.js';
 
 // в лока сторэдж
 function setLocalStorage(key, value) {

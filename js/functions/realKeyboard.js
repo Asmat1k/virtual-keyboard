@@ -2,7 +2,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable max-len */
 import changeButtons from './changeButtons.js';
-import getLetters from './getLetters.js';
+import getLetters from './getletters.js';
 import changeCase from './changeCase.js';
 import changeLang from './changeLang.js';
 
