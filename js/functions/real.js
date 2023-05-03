@@ -125,9 +125,12 @@ export default function realPush() {
       }
       case 'backspace': {
         event.preventDefault();
-        if (display.selectionStart > 0) {
+        if (start >= 1) {
           display.value = oldStr.slice(0, start - 1) + oldStr.slice(end);
           display.selectionStart = display.selectionEnd = start - 1;
+        }
+        else {
+          display.selectionStart = display.selectionEnd = start
         }
         break;
       }
