@@ -72,12 +72,15 @@ export default function realPush() {
             letters[i].textContent = letters[i].textContent.toLocaleLowerCase();
           }
         }
-        document.body.addEventListener('keydown', (eventNew) => {
-          if (eventNew.key.toLowerCase() === 'alt') {
-            lang = lang === 'eng' ? 'rus' : 'eng';
-            changeLang(letters, lang, shift, caps);
-          }
-        });
+        if(shiftStatus) {
+          document.body.addEventListener('keydown', (eventNew) => {
+            if (eventNew.key.toLowerCase() === 'alt' && shiftStatus) {
+              shiftStatus = !shiftStatus;
+              lang = lang === 'eng' ? 'rus' : 'eng';
+              changeLang(letters, lang, shift, caps);
+            }
+          });
+        }
         display.selectionStart = display.selectionEnd = start;
         break;
       }
@@ -118,6 +121,9 @@ export default function realPush() {
         if (!notButtonToEnter.includes(keyValue) && keyValue !== undefined) {
           display.value = `${oldStr.slice(0, start)}${keyValue}${oldStr.slice(end)}`;
           display.selectionStart = display.selectionEnd = start + 1;
+        }
+        if(shiftStatus) {
+          shiftStatus = !shiftStatus;
         }
         if (arrowsCode.includes(event.code)) {
           for (let i = 0; i < 4; i += 1) {
