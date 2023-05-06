@@ -1,13 +1,17 @@
 .input-block {
-  min-width: 735px;
+  min-width: 680px;
+  max-width: 680px;
   min-height: 200px;
+  max-height: 200px;
   margin: 15px;
   border: 1px solid black;
   border-radius: 4px;
 }
 
 .keyboard {
-  min-width: 735px;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 720px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -19,54 +23,55 @@
   transition: 0.3s;
 }
 .keyboard .keyboard__row .keyboard__button {
-  min-width: 45px;
-  min-height: 35px;
-  padding: 5px;
-  border: 0 transparent;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 3px;
   text-align: center;
-  border-radius: 2px;
-  background-color: rgba(133, 133, 133, 0.5568627451);
+  color: white;
+  border: 0 transparent;
+  background-color: #252427;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.12);
   font-weight: 600;
   transition: 0.1s;
 }
 .keyboard .keyboard__row .keyboard__button:active {
+  box-shadow: 0;
+  transform: scale(0.9);
   transition: 0.1s;
-  box-shadow: 0px 2px 19px 4px rgba(34, 60, 80, 0.11);
-  transform: scale(0.85);
 }
 .keyboard .keyboard__row .keyboard__button.active {
+  box-shadow: 0;
+  transform: scale(0.9);
   transition: 0.1s;
-  box-shadow: 0px 2px 19px 4px rgba(34, 60, 80, 0.11);
-  transform: scale(0.85);
 }
 .keyboard .keyboard__row .keyboard__big-button {
-  min-width: 103px;
+  min-width: 96px;
 }
 .keyboard .keyboard__row .keyboard__shift {
-  min-width: 103px;
+  min-width: 96px;
 }
 .keyboard .keyboard__row .keyboard__medium-button {
   min-width: 58px;
 }
 .keyboard .keyboard__row .keyboard__space {
-  min-width: 273px;
+  min-width: 233px;
 }
 .keyboard .keyboard__row .keyboard__button_colored {
-  background-color: rgba(54, 54, 54, 0.7058823529);
+  border-radius: 1px solid black;
 }
 .keyboard .keyboard__row .keyboard__delete {
   min-width: 63px;
 }
 .keyboard .keyboard__row .keyboard__backspace {
-  min-width: 112px;
+  min-width: 108px;
 }
 .keyboard .keyboard__row .keyboard-button_on {
-  color: #00efc9;
-  text-transform: uppercase;
+  color: #5e0cc2;
   transition: 0.3s;
 }
 
 .warning {
+  color: white;
   font-weight: 600;
   margin: 10px;
 }
@@ -82,154 +87,120 @@
     min-width: 30px;
   }
   .keyboard .keyboard__row .keyboard__big-button {
-    min-width: 103px;
+    min-width: 88px;
   }
   .keyboard .keyboard__row .keyboard__medium-button {
     min-width: 61px;
   }
-  .keyboard .keyboard__row .keyboard__button_colored {
-    background-color: rgba(54, 54, 54, 0.7058823529);
-  }
   .keyboard .keyboard__row .keyboard__space {
-    min-width: 184px;
+    min-width: 151px;
   }
   .keyboard .keyboard__row .keyboard__delete {
-    min-width: 105px;
+    min-width: 70px;
   }
   .keyboard .keyboard__row .keyboard__backspace {
-    min-width: 143px;
+    min-width: 110px;
   }
 }
 @media (max-width: 600px) {
   .input-block {
-    min-width: 400px;
+    min-width: 460px;
   }
   .keyboard {
     min-width: 300px;
   }
   .keyboard .keyboard__row .keyboard__button {
-    min-width: 20px;
+    min-width: 25px;
   }
   .keyboard .keyboard__row .keyboard__big-button {
-    min-width: 82px;
+    min-width: 68px;
   }
   .keyboard .keyboard__row .keyboard__shift {
-    min-width: 81px;
+    min-width: 68px;
   }
   .keyboard .keyboard__row .keyboard__medium-button {
-    min-width: 37px;
-  }
-  .keyboard .keyboard__row .keyboard__button_colored {
-    background-color: rgba(54, 54, 54, 0.7058823529);
+    min-width: 41px;
   }
   .keyboard .keyboard__row .keyboard__space {
     min-width: 130px;
   }
   .keyboard .keyboard__row .keyboard__delete {
-    min-width: 80px;
+    min-width: 40px;
   }
   .keyboard .keyboard__row .keyboard__backspace {
-    min-width: 119px;
+    min-width: 80px;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 485px) {
   .input-block {
-    min-width: 330px;
+    min-width: 400px;
   }
   .keyboard {
     min-width: 300px;
-    max-width: 345px;
+    max-width: 430px;
   }
   .keyboard .keyboard__row .keyboard__button {
-    min-width: 15px;
+    padding: 1px;
+    min-width: 20px;
   }
   .keyboard .keyboard__row .keyboard__big-button {
-    min-width: 55px;
-  }
-  .keyboard .keyboard__row .keyboard__medium-button {
-    min-width: 25px;
-  }
-  .keyboard .keyboard__row .keyboard__button_colored {
-    background-color: rgba(54, 54, 54, 0.7058823529);
-  }
-  .keyboard .keyboard__row .keyboard__space {
     min-width: 65px;
   }
+  .keyboard .keyboard__row .keyboard__medium-button {
+    min-width: 36px;
+  }
+  .keyboard .keyboard__row .keyboard__space {
+    min-width: 130px;
+  }
   .keyboard .keyboard__row .keyboard__shift {
-    min-width: 56px;
+    min-width: 65px;
   }
   .keyboard .keyboard__row .keyboard__delete {
-    min-width: 30px;
+    min-width: 55px;
   }
   .keyboard .keyboard__row .keyboard__backspace {
     min-width: 85px;
   }
 }
-@media (max-width: 380px) {
-  .input-block {
-    min-width: 330px;
-  }
-  .keyboard {
-    min-width: 300px;
-  }
-  .keyboard .keyboard__row .keyboard__button {
-    min-width: 13px;
-  }
-  .keyboard .keyboard__row .keyboard__big-button {
-    min-width: 55px;
-  }
-  .keyboard .keyboard__row .keyboard__medium-button {
-    min-width: 20px;
-  }
-  .keyboard .keyboard__row .keyboard__button_colored {
-    background-color: rgba(54, 54, 54, 0.7058823529);
-  }
-  .keyboard .keyboard__row .keyboard__space {
-    min-width: 65px;
-  }
-  .keyboard .keyboard__row .keyboard__shift {
-    min-width: 57px;
-  }
-  .keyboard .keyboard__row .keyboard__backspace {
-    min-width: 81px;
-  }
-}
-@media (max-width: 355px) {
+@media (max-width: 420px) {
   .input-block {
     min-width: 300px;
   }
   .keyboard {
-    min-width: 200px;
-    max-width: 300px;
+    min-width: 0;
+    max-width: 350px;
   }
   .keyboard .keyboard__row .keyboard__button {
     min-width: 15px;
     padding: 0;
   }
   .keyboard .keyboard__row .keyboard__big-button {
-    min-width: 39px;
+    min-width: 44px;
   }
   .keyboard .keyboard__row .keyboard__medium-button {
     min-width: 30px;
-  }
-  .keyboard .keyboard__row .keyboard__button_colored {
-    background-color: rgba(54, 54, 54, 0.7058823529);
   }
   .keyboard .keyboard__row .keyboard__space {
     min-width: 72px;
   }
   .keyboard .keyboard__row .keyboard__shift {
-    min-width: 39px;
+    min-width: 44px;
   }
   .keyboard .keyboard__row .keyboard__delete {
     min-width: 25px;
   }
   .keyboard .keyboard__row .keyboard__backspace {
-    min-width: 44px;
+    min-width: 54px;
+  }
+}
+@media (max-width: 300px) {
+  .input-block {
+    min-width: 270px;
   }
 }
 body {
   margin: 0;
+  background-color: #141414;
 }
 
 .main__wrapper {
