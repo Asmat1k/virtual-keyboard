@@ -4,7 +4,8 @@
   min-height: 200px;
   max-height: 200px;
   margin: 15px;
-  border: 1px solid black;
+  background-color: #252427;
+  border: 1px solid #353337;
   border-radius: 4px;
 }
 
