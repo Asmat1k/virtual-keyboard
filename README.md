@@ -13,4 +13,5 @@
 - JS
 - Validity checked by ESLint
 
-Deploy: [click](https://asmat1k.github.io/virtual-keyboard/)
+### Deploy
+- [Deploy](https://asmat1k.github.io/virtual-keyboard/)
