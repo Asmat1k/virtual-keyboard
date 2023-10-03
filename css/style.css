@@ -1,4 +1,6 @@
 .input-block {
+  color: white;
+  font-weight: 600;
   min-width: 680px;
   max-width: 680px;
   min-height: 200px;
